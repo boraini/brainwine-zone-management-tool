@@ -37,19 +37,26 @@ while True:
         scan_purge_zones(purgelist)
         continue
 
+    if cmd == "scan all":
+        scan_all_zones(purgelist)
+        continue
+
     if cmd.startswith("exclude"):
         zone_name = cmd[len("exclude "):].lstrip().rstrip()
-        purgelist = exclude_zone(purgelist, zone_name)
+        exclude_zone(purgelist, zone_name)
         continue
     
     if cmd.startswith("include"):
         zone_name = cmd[len("exclude "):].lstrip().rstrip()
-        purgelist = include_zone(purgelist, zone_name)
+        include_zone(purgelist, zone_name)
         continue
 
     if cmd == "commit":
-        delete_zones(purgelist)
-        print("Zones have been deleted. Exiting...")
-        break
+        print("Are you sure? There is no way back! Input \"yes\" to continue.")
+        if input() == "yes":
+            delete_zones(purgelist)
+            print("Zones have been deleted. Exiting...")
+            break
+        continue
 
     print("Invalid command: " + cmd)

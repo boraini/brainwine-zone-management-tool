@@ -72,18 +72,31 @@ def include_zone(zone_list, zone_name):
     if result is not None:
         zone_list.append(result)
 
+def scan_all_zones(zone_list = []):
+    zone_list.clear()
+    zone_list.extend(zone_data.keys())
+
 def add_tabs(s, n):
     if s is None:
-        return "\t" * 3
+        return "\t" * n
+    s = str(s)
     width = len(s) // 8
     return s + ("\t" * (n - width))
 
 def print_zones(zone_list):
+    keys = [("name", 3), ("uuid", 5), ("owner", 2), ("private", 1), ("has_protected_block", 3)]
+
+    print("These zones will be deleted on the execution of the commit command: ")
+    for my_key in keys:
+        print(add_tabs(*my_key), end="")
+    print()
+
     for uuid in zone_list:
         zone = zone_data[uuid]
-        print(add_tabs(zone["name"], 3), end="")
-        print(add_tabs(zone["uuid"], 5), end="")
-        print(add_tabs(zone["owner"], 2), end="")
+        for my_key in keys:
+            print(add_tabs(zone[my_key[0]], my_key[1]), end="")
+
+        # line break
         print()
 
 def delete_zones(zone_list):
