@@ -102,3 +102,11 @@ def print_zones(zone_list):
 def delete_zones(zone_list):
     for uuid in zone_list:
         shutil.rmtree(resolve("zones/" + uuid))
+
+def print_player(player_name):
+    for uuid in player_data:
+        if player_data[uuid]["name"] == player_name:
+            print(f"UUID of player {player_name} is {uuid}")
+            return
+
+    print("Player not found!")
