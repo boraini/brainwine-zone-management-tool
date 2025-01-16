@@ -1,6 +1,8 @@
 import os
 import json
 import shutil
+from dateutil.parser import isoparse
+from datetime import datetime, timezone
 
 zone_data = {}
 player_data = {}
@@ -9,6 +11,9 @@ players_by_block_hash = {}
 config = None
 with open("data.json") as c:
     config = json.load(c)
+
+def get_current_time():
+    return datetime.now(timezone.utc)
 
 def java_hash(s):
     current = 0
@@ -45,8 +50,17 @@ for d in os.listdir(resolve("zones/")):
         obj = json.load(f)
         res["uuid"] = d
         res["name"] = obj["name"]
+        res["biome"] = obj["biome"]
         res["private"] = obj["private"]
         res["owner"] = None if obj["owner"] is None else player_data[obj["owner"]]["name"]
+        try:
+            res["creation_date"] = isoparse(obj["creation_date"])
+        except:
+            res["creation_date"] = get_current_time()
+        try:
+            res["last_active_date"] = isoparse(obj["last_active_date"])
+        except:
+            res["last_active_date"] = get_current_time()
 
     zone_data[d] = res
 
@@ -98,6 +112,8 @@ def print_zones(zone_list):
 
         # line break
         print()
+
+    print(f"There are {len(zone_list)} zones in the list.")
 
 def delete_zones(zone_list):
     for uuid in zone_list:

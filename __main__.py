@@ -1,5 +1,6 @@
 from purger import *
 from data import *
+from short_name_plain import *
 
 HELP = """Zone Management Tool
 stop: stops the tool
@@ -37,6 +38,14 @@ while True:
     
     if cmd == "scan purge":
         scan_purge_zones(purgelist)
+        continue
+
+    if cmd == "scan short name plain":
+        scan_short_name_plain_zones(purgelist)
+        continue
+
+    if cmd == "scan purge except short name plain":
+        scan_purge_zones_except_short_name_plain(purgelist)
         continue
 
     if cmd == "scan all":
