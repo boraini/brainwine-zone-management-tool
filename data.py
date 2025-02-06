@@ -92,13 +92,13 @@ def scan_all_zones(zone_list = []):
 
 def add_tabs(s, n):
     if s is None:
-        return "\t" * n
+        return "None" + ("\t" * (n - 1))
     s = str(s)
     width = len(s) // 8
     return s + ("\t" * (n - width))
 
 def print_zones(zone_list):
-    keys = [("name", 3), ("uuid", 5), ("owner", 2), ("private", 1), ("has_protected_block", 3)]
+    keys = [("name", 3), ("uuid", 5), ("owner", 3), ("private", 1), ("has_protected_block", 3), ("creation_date", 5), ("biome", 1)]
 
     print("These zones will be deleted on the execution of the commit command: ")
     for my_key in keys:
