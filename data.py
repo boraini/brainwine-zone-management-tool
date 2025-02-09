@@ -69,6 +69,11 @@ def find_uuid(zone_name):
         if zone_data[uuid]["name"] == zone_name:
             return uuid
         
+def find_uuid_by_player(player_name, zone_name):
+    for uuid in zone_data:
+        if zone_data[uuid]["owner"] == player_name and zone_data[uuid]["name"] == zone_name:
+            return uuid
+        
     return None
 def exclude_zone(zone_list, zone_name):
     result = find_uuid(zone_name)
@@ -83,6 +88,11 @@ def include_zone(zone_list, zone_name):
     exclude_zone(zone_list, zone_name)
     
     result = find_uuid(zone_name)
+    if result is not None:
+        zone_list.append(result)
+
+def include_zone_by_player(zone_list, player_name, zone_name):
+    result = find_uuid_by_player(player_name, zone_name)
     if result is not None:
         zone_list.append(result)
 

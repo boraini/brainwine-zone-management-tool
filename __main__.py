@@ -61,7 +61,14 @@ while True:
         zone_name = cmd[len("exclude "):].lstrip().rstrip()
         exclude_zone(purgelist, zone_name)
         continue
-    
+
+    if cmd.startswith("include by player"):
+        mypair = cmd[len("include by player "):].lstrip().rstrip()
+        player_name = mypair[:mypair.index(" ")]
+        zone_name = mypair[(mypair.index(" ") + 1):]
+        include_zone_by_player(purgelist, player_name, zone_name)
+        continue
+
     if cmd.startswith("include"):
         zone_name = cmd[len("include "):].lstrip().rstrip()
         include_zone(purgelist, zone_name)
