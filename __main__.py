@@ -52,6 +52,11 @@ while True:
         scan_all_zones(purgelist)
         continue
 
+    if cmd.startswith("scan owned by"):
+        player_name = cmd[len("scan owned by "):].lstrip().rstrip()
+        scan_owned_by(purgelist, player_name)
+        continue
+
     if cmd.startswith("exclude"):
         zone_name = cmd[len("exclude "):].lstrip().rstrip()
         exclude_zone(purgelist, zone_name)

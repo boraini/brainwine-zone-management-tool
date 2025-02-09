@@ -90,6 +90,9 @@ def scan_all_zones(zone_list = []):
     zone_list.clear()
     zone_list.extend(zone_data.keys())
 
+def scan_owned_by(zone_list, player_name):
+    zone_list.extend([uuid for uuid in zone_data.keys() if zone_data[uuid]["owner"] == player_name])
+
 def add_tabs(s, n):
     if s is None:
         return "None" + ("\t" * (n - 1))
