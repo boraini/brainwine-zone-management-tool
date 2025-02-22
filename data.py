@@ -52,7 +52,7 @@ for d in os.listdir(resolve("zones/")):
     with open(resolve("zones/" + d + "/metablocks.json")) as f:
         obj = json.load(f)
         res["has_teleporters_only"] = not any(["owner" in o and o["owner"] is not None and o["item"] != "mechanical/teleporter" for o in obj])
-        res["has_protected_block"] = any(["owner" in o and o["owner"] is not None and (o["item"].startswith("mechanical/dish") or o["item"] == "mechanical/teleporter") for o in obj])
+        res["has_protected_block"] = any(["owner" in o and o["owner"] is not None and (o["item"].startswith("mechanical/dish") or o["item"] == "mechanical/teleporter" or o["item"].startswith("signs/plaque")) for o in obj])
         
     with open(resolve("zones/" + d + "/config.json")) as f:
         obj = json.load(f)
@@ -62,7 +62,7 @@ for d in os.listdir(resolve("zones/")):
         res["private"] = obj["private"]
         res["owner"] = None if obj["owner"] is None else player_data[obj["owner"]]["name"]
         res["purgeable"] = not ("rules" in obj and "purgeable" in obj["rules"] and not obj["rules"]["purgeable"])
-        
+
         try:
             res["creation_date"] = isoparse(obj["creation_date"])
         except:
