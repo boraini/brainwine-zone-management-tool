@@ -74,6 +74,11 @@ while True:
         include_zone(purgelist, zone_name)
         continue
 
+    if cmd.startswith("player owner hash"):
+        owner_hash = int(cmd[len("player owner hash "):])
+        find_player_by_owner_hash(owner_hash)
+        continue
+
     if cmd.startswith("player"):
         player_name = cmd[len("player "):].lstrip().rstrip()
         print_player(player_name)

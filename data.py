@@ -17,11 +17,17 @@ def get_current_time():
 
 def java_hash(s):
     current = 0
-    mult = 1
-    for i in range(len(s) - 1, -1, -1):
-        current += mult * ord(s[i])
-        mult *= 31
+    for chr in s:
+        current = (31 * current + ord(chr)) & (2**32 - 1)
+        if current & 2**31:
+            current -= 2**32
     return current
+
+def java_mod(n, m):
+    if n < 0:
+        return (m % m) - m
+    else:
+        return n % m
 
 def resolve(p):
     return config["run_directory"] + p
@@ -46,6 +52,7 @@ for d in os.listdir(resolve("zones/")):
     with open(resolve("zones/" + d + "/metablocks.json")) as f:
         obj = json.load(f)
         res["has_protected_block"] = any(["owner" in o and o["owner"] is not None for o in obj])
+        res["has_teleporters_only"] = not any(["owner" in o and o["owner"] is not None and o["item"] != "mechanical/teleporter" for o in obj])
     with open(resolve("zones/" + d + "/config.json")) as f:
         obj = json.load(f)
         res["uuid"] = d
@@ -53,6 +60,7 @@ for d in os.listdir(resolve("zones/")):
         res["biome"] = obj["biome"]
         res["private"] = obj["private"]
         res["owner"] = None if obj["owner"] is None else player_data[obj["owner"]]["name"]
+        res["purgeable"] = "rules" in obj and obj["rules"]["purgeable"]
         try:
             res["creation_date"] = isoparse(obj["creation_date"])
         except:
@@ -111,7 +119,7 @@ def add_tabs(s, n):
     return s + ("\t" * (n - width))
 
 def print_zones(zone_list):
-    keys = [("name", 3), ("uuid", 5), ("owner", 3), ("private", 1), ("has_protected_block", 3), ("creation_date", 5), ("biome", 1)]
+    keys = [("name", 3), ("uuid", 5), ("owner", 3), ("private", 1), ("has_protected_block", 3), ("has_teleporters_only", 3), ("creation_date", 5), ("biome", 1)]
 
     print("These zones will be deleted on the execution of the commit command: ")
     for my_key in keys:
@@ -131,6 +139,16 @@ def print_zones(zone_list):
 def delete_zones(zone_list):
     for uuid in zone_list:
         shutil.rmtree(resolve("zones/" + uuid))
+
+def find_player_by_owner_hash(owner_hash):
+    for uuid in player_data:
+        print(java_mod((java_hash(uuid) & 2047), 2047))
+        if owner_hash == 1 + java_mod((java_hash(uuid) & 2047), 2047):
+            player_name = player_data[uuid]["name"]
+            print(f"Player {player_name} with uuid {uuid} has owner hash {owner_hash}.")
+            return
+        
+    print("No such owner hash found")
 
 def print_player(player_name):
     for uuid in player_data:
